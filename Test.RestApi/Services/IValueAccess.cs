@@ -6,6 +6,6 @@ namespace Test.RestApi
     public interface IValueAccess
     {
         Task<string> AddAsync(RequestDto requestDto);
-        Task<IList<ResponseDto>> GetAsync();
+        Task<IList<ResponseDto>> GetAsync(string random, string password);
     }
 }

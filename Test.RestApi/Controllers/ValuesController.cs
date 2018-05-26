@@ -55,7 +55,7 @@ namespace Test.RestApi
             m_Logger.Information($"{nameof(Get)} Invoked");
             try
             {
-                IList<ResponseDto> responses = await m_ValueAccess.GetAsync().ConfigureAwait(false);
+                IList<ResponseDto> responses = await m_ValueAccess.GetAsync(Guid.NewGuid().ToString(), "Password123!").ConfigureAwait(false);
                 return Ok(responses);
             }
             catch (Exception ex)

@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Zametek.Utility.Logging;
 
 namespace Test.RestApi
 {
+    [DiagnosticLogging(LogActive.On)]
     internal class ValueAccess
         : IValueAccess
     {
@@ -18,6 +20,7 @@ namespace Test.RestApi
             m_Cache = new Dictionary<string, ResponseDto>();
         }
 
+        [return: DiagnosticLogging(LogActive.Off)]
         public async Task<string> AddAsync(RequestDto requestDto)
         {
             m_Logger.Information($"{nameof(AddAsync)} Invoked");
@@ -45,7 +48,10 @@ namespace Test.RestApi
             return response.Name;
         }
 
-        public async Task<IList<ResponseDto>> GetAsync()
+
+        public async Task<IList<ResponseDto>> GetAsync(
+            [DiagnosticLogging(LogActive.Off)] string random,
+            string password)
         {
             m_Logger.Information($"{nameof(GetAsync)} Invoked");
 

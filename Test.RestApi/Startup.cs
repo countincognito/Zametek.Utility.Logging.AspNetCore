@@ -1,4 +1,4 @@
-﻿using Castle.DynamicProxy;
+﻿using Destructurama;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -26,12 +26,13 @@ namespace Test.RestApi
             // Use FromLoggingProxy to enrich the serilog output with diagnostic, tracking, error and performance logging.
             ILogger serilog = new LoggerConfiguration()
                 .Enrich.FromLogProxy()
+                .Destructure.UsingAttributes()
                 .WriteTo.Seq("http://localhost:5341")
                 .CreateLogger();
             Log.Logger = serilog;
 
             // Wrapping a class in a LogProxy automatically enriches the serilog output.
-            var valueAccess = LogProxy.Create<IValueAccess>(new ValueAccess(serilog), serilog);
+            var valueAccess = LogProxy.Create<IValueAccess>(new ValueAccess(serilog), serilog, LogType.All);
 
             services
                 .AddSingleton(valueAccess)
