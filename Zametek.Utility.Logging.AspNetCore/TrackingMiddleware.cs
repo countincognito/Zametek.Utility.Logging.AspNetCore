@@ -12,18 +12,33 @@ namespace Zametek.Utility.Logging.AspNetCore
         public const string RemoteIpAddressName = nameof(ConnectionInfo.RemoteIpAddress);
         public const string TraceIdentifierName = nameof(HttpContext.TraceIdentifier);
         public const string UserIdName = @"UserId";
-        private readonly RequestDelegate _next;
-        private readonly Func<IDictionary<string, string>> _setupFunc;
+        private readonly RequestDelegate m_Next;
+        private readonly Func<HttpContext, IDictionary<string, string>> m_SetupFunc;
+
+        public TrackingMiddleware(RequestDelegate next)
+            : this(next, _ => new Dictionary<string, string>())
+        {
+        }
 
         public TrackingMiddleware(RequestDelegate next, Func<IDictionary<string, string>> setupFunc)
         {
-            _next = next;
-            _setupFunc = setupFunc;
+            if (setupFunc == null)
+            {
+                throw new ArgumentNullException(nameof(setupFunc));
+            }
+            m_Next = next ?? throw new ArgumentNullException(nameof(next));
+            m_SetupFunc = _ => setupFunc.Invoke();
+        }
+
+        public TrackingMiddleware(RequestDelegate next, Func<HttpContext, IDictionary<string, string>> setupFunc)
+        {
+            m_Next = next ?? throw new ArgumentNullException(nameof(next));
+            m_SetupFunc = setupFunc ?? throw new ArgumentNullException(nameof(setupFunc));
         }
 
         public Task Invoke(HttpContext httpContext)
         {
-            IDictionary<string, string> extraHeaders = _setupFunc?.Invoke() ?? new Dictionary<string, string>();
+            IDictionary<string, string> extraHeaders = m_SetupFunc?.Invoke(httpContext) ?? new Dictionary<string, string>();
             Debug.Assert(extraHeaders != null);
             TrackingContext.NewCurrentIfEmpty(extraHeaders);
 
@@ -32,7 +47,7 @@ namespace Zametek.Utility.Logging.AspNetCore
             using (LogContext.PushProperty(TraceIdentifierName, httpContext.TraceIdentifier))
             using (LogContext.PushProperty(UserIdName, httpContext.User?.Identity?.Name))
             {
-                return _next.Invoke(httpContext);
+                return m_Next.Invoke(httpContext);
             }
         }
     }

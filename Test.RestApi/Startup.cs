@@ -31,6 +31,8 @@ namespace Test.RestApi
                 .CreateLogger();
             Log.Logger = serilog;
 
+            // LogProxy.FilterTheseParameters.Add("requestDto");
+
             // Wrapping a class in a LogProxy automatically enriches the serilog output.
             var valueAccess = LogProxy.Create<IValueAccess>(new ValueAccess(serilog), serilog, LogType.All);
 
@@ -56,8 +58,9 @@ namespace Test.RestApi
 
             // Use this to add unique callchain IDs to each call into a controller, and add custom headers.
             app.UseTrackingMiddleware(
-                () => new Dictionary<string, string>()
+                (context) => new Dictionary<string, string>()
                 {
+                    { "ConnectionId", context.Connection.Id },
                     { "Country of origin", "UK" },
                     { "Random string generated with each call", System.Guid.NewGuid().ToString() }
                 });
