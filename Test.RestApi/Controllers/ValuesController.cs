@@ -30,15 +30,22 @@ namespace Test.RestApi
         public async Task<IActionResult> Post([FromBody]RequestDto requestDto)
         {
             m_Logger.Information($"{nameof(Post)} Invoked");
+
+            // Ensure this actiuon is truly asyncronious.
+            await Task.Yield();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             try
             {
+                await Task.Yield();
                 string result = await m_ValueAccess.AddAsync(requestDto).ConfigureAwait(false);
                 if (!string.IsNullOrWhiteSpace(result))
                 {
+
+                    m_Logger.Information($"{nameof(Post)} Completed");
                     return Ok(result);
                 }
             }
@@ -53,9 +60,15 @@ namespace Test.RestApi
         public async Task<IActionResult> Get()
         {
             m_Logger.Information($"{nameof(Get)} Invoked");
+
+            // Ensure this actiuon is truly asyncronious.
+            await Task.Yield();
+
             try
             {
                 IList<ResponseDto> responses = await m_ValueAccess.GetAsync(Guid.NewGuid().ToString(), "Password123!").ConfigureAwait(false);
+
+                m_Logger.Information($"{nameof(Get)} Completed");
                 return Ok(responses);
             }
             catch (Exception ex)

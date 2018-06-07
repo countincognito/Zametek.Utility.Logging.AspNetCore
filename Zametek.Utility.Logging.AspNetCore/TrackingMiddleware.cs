@@ -36,7 +36,7 @@ namespace Zametek.Utility.Logging.AspNetCore
             m_SetupFunc = setupFunc ?? throw new ArgumentNullException(nameof(setupFunc));
         }
 
-        public Task Invoke(HttpContext httpContext)
+        public async Task Invoke(HttpContext httpContext)
         {
             IDictionary<string, string> extraHeaders = m_SetupFunc?.Invoke(httpContext) ?? new Dictionary<string, string>();
             Debug.Assert(extraHeaders != null);
@@ -47,7 +47,9 @@ namespace Zametek.Utility.Logging.AspNetCore
             using (LogContext.PushProperty(TraceIdentifierName, httpContext.TraceIdentifier))
             using (LogContext.PushProperty(UserIdName, httpContext.User?.Identity?.Name))
             {
-                return m_Next.Invoke(httpContext);
+                // Must await the next middlware, otherwise the log context will unwind at the first asyncronious
+                // operation.
+                await m_Next.Invoke(httpContext).ConfigureAwait(false);
             }
         }
     }
