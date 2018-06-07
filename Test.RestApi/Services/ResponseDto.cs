@@ -1,5 +1,4 @@
-﻿using Destructurama.Attributed;
-using System;
+﻿using System;
 
 namespace Test.RestApi
 {
@@ -10,7 +9,6 @@ namespace Test.RestApi
 
         public string Email { get; set; }
 
-        [NotLogged]
         public string Password { get; set; }
     }
 }

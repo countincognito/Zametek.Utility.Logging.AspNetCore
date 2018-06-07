@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using System.Net;
 
 namespace Test.RestApi
 {
@@ -14,10 +12,7 @@ namespace Test.RestApi
 
         public static IWebHost BuildWebHost(string[] args) =>
             new WebHostBuilder()
-                .UseKestrel(options =>
-                {
-                    options.Listen(IPAddress.Any, 80);
-                })
+                .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();

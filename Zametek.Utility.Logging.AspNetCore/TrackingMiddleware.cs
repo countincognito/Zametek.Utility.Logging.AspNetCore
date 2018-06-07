@@ -9,9 +9,6 @@ namespace Zametek.Utility.Logging.AspNetCore
 {
     public class TrackingMiddleware
     {
-        public const string RemoteIpAddressName = nameof(ConnectionInfo.RemoteIpAddress);
-        public const string TraceIdentifierName = nameof(HttpContext.TraceIdentifier);
-        public const string UserIdName = @"UserId";
         private readonly RequestDelegate m_Next;
         private readonly Func<HttpContext, IDictionary<string, string>> m_SetupFunc;
 
@@ -43,12 +40,8 @@ namespace Zametek.Utility.Logging.AspNetCore
             TrackingContext.NewCurrentIfEmpty(extraHeaders);
 
             using (LogContext.Push(new TrackingContextEnricher()))
-            using (LogContext.PushProperty(RemoteIpAddressName, httpContext.Connection.RemoteIpAddress))
-            using (LogContext.PushProperty(TraceIdentifierName, httpContext.TraceIdentifier))
-            using (LogContext.PushProperty(UserIdName, httpContext.User?.Identity?.Name))
             {
-                // Must await the next middlware, otherwise the log context will unwind at the first asyncronious
-                // operation.
+                // Must await the next middleware, otherwise the log context will unwind at the first asyncronious operation.
                 await m_Next.Invoke(httpContext).ConfigureAwait(false);
             }
         }

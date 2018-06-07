@@ -1,6 +1,7 @@
 ﻿using Destructurama;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -13,6 +14,11 @@ namespace Test.RestApi
 {
     public class Startup
     {
+        public const string RemoteIpAddressName = nameof(ConnectionInfo.RemoteIpAddress);
+        public const string TraceIdentifierName = nameof(HttpContext.TraceIdentifier);
+        public const string UserIdName = @"UserId";
+        public const string ConnectionIdName = @"ConnectionId";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,6 +33,7 @@ namespace Test.RestApi
             ILogger serilog = new LoggerConfiguration()
                 .Enrich.FromLogProxy()
                 .Destructure.UsingAttributes()
+                .Destructure.ByIgnoringProperties<ResponseDto>(x => x.Password)
                 .WriteTo.Seq("http://localhost:5341")
                 .CreateLogger();
             Log.Logger = serilog;
@@ -60,7 +67,10 @@ namespace Test.RestApi
             app.UseTrackingMiddleware(
                 (context) => new Dictionary<string, string>()
                 {
-                    { "ConnectionId", context.Connection.Id },
+                    { RemoteIpAddressName, context.Connection?.RemoteIpAddress?.ToString() },
+                    { TraceIdentifierName, context.TraceIdentifier },
+                    { UserIdName, context.User?.Identity?.Name },
+                    { ConnectionIdName, context.Connection.Id },
                     { "Country of origin", "UK" },
                     { "Random string generated with each call", System.Guid.NewGuid().ToString() }
                 });
