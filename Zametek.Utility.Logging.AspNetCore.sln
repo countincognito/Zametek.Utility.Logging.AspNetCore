@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.RestApi", "Test.RestApi\Test.RestApi.csproj", "{16303037-F5D0-4361-B86B-0B35BAF4957D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.RestApi", "test\Test.RestApi\Test.RestApi.csproj", "{16303037-F5D0-4361-B86B-0B35BAF4957D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zametek.Utility.Logging.AspNetCore", "Zametek.Utility.Logging.AspNetCore\Zametek.Utility.Logging.AspNetCore.csproj", "{4F623874-428B-4730-8C7C-32E5ACC33258}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zametek.Utility.Logging.AspNetCore", "src\Zametek.Utility.Logging.AspNetCore\Zametek.Utility.Logging.AspNetCore.csproj", "{4F623874-428B-4730-8C7C-32E5ACC33258}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B0FE2B92-C044-4EF7-BCFB-5F191BCAD1C8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{83DDD0E1-AA42-4BEB-B631-AAFDEFB386EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +28,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{16303037-F5D0-4361-B86B-0B35BAF4957D} = {83DDD0E1-AA42-4BEB-B631-AAFDEFB386EF}
+		{4F623874-428B-4730-8C7C-32E5ACC33258} = {B0FE2B92-C044-4EF7-BCFB-5F191BCAD1C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8ABC0907-7279-4997-97E1-7C1EC80D640F}

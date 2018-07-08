@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Zametek.Utility.Logging.AspNetCore\Zametek.Utility.Logging.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\src\Zametek.Utility.Logging.AspNetCore\Zametek.Utility.Logging.AspNetCore.csproj" />
   </ItemGroup>
 
 </Project>
