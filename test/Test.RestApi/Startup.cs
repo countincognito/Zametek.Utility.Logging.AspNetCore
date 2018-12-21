@@ -32,7 +32,6 @@ namespace Test.RestApi
             // Use FromLoggingProxy to enrich the serilog output with diagnostic, tracking, error and performance logging.
             ILogger serilog = new LoggerConfiguration()
                 .Enrich.FromLogProxy()
-                .Destructure.UsingAttributes()
                 .Destructure.ByIgnoringProperties<ResponseDto>(x => x.Password)
                 .WriteTo.Seq("http://localhost:5341")
                 .CreateLogger();
